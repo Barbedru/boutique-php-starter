@@ -1,9 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
 <?php
+
+
 $firstNames = ['John', 'Jane', 'Doe', 'Smith'];
 
+?>
+<ul>
+
+<?php
+
+
 foreach ($firstNames as $names){
-    echo $names;
+    $i++;
+    echo "<li> $i . $names</li>";
 }
 
-
 ?>
+</ul>
+
+</body>
+</html>
