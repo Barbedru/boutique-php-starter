@@ -10,20 +10,19 @@
 <?php
 
 $products = [
-    1 => ["id" => "T-shirt", "price" => 19.99],
-    2 => ["id" => "Jean", "price" => 39.99],
-    3 => ["id" => "Veste", "price" => 59.99],
-    4 => ["id" => "Chaussure", "price" => 49.99],
-    5 => ["id" => "Casquette", "price" => 9.99],
+    1 => ["name" => "T-shirt", "price" => 19.99],
+    2 => ["name" => "Jean", "price" => 39.99],
+    3 => ["name" => "Veste", "price" => 59.99],
+    4 => ["name" => "Chaussure", "price" => 49.99],
+    5 => ["name" => "Casquette", "price" => 9.99],
 ];
 
-$id = $_GET["id"];
+$id = $_GET["id"] ?? null;
 
-if (($products[$id])){
-    $product = $products[$id];
-    echo 'Produit: ' . $product["id"] ;    //http://localhost:8000/produit.php?id=3
-} else{ 
-    echo 'Produit non trouvé.';           //http://localhost:8000/produit.php?id=6
+if ($id){
+    echo 'Produit: ' . $products[$id]["name"] . " ". $products[$id]["price"] . " €" ;    //http://localhost:8000/produit.php?id=3   Produit: Veste 59.99€
+} else { 
+    echo 'Produit non trouvé.';           //http://localhost:8000/produit.php?id=6     Produit non trouvé
 
 }
 
