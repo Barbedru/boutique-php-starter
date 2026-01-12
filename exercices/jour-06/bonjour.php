@@ -9,6 +9,15 @@
 
 <?php
 
+$name = $_GET["name"];
+
+if ($_GET ["name"]){
+        echo "Bonjour " . $name . "!";
+}   else{
+        echo "Bonjour visiteur !";
+    
+}
+
 echo 'Bonjour ' . ($_GET['name']) . ', vous avez ' . ($_GET['age']) . ' ans !';
 
 ?>
