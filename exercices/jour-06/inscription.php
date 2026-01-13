@@ -1,79 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Inscription</title>
 </head>
 <body>
-    
-
-<form method="POST" action="inscription.php">
-
-<div> Username : </br>
-    <input type="text_username" name="username" >
-   
-</div>
-
-<div> Email : </br>
-<input type="text_email" name="email"  >
-</div>
-
-
-<div> Password : </br>
-    <input type="password" name="password"  >
-</div>
-
-
-<div> Confirm Password : </br>
-    <input type="conf_password" name="conf_password"  >
-</div>
-</br>
-    <button type="submit" > Inscription </button>
-
-</form>
 
 <?php
 
-
-$username = $_POST["username"] ?? null;
-$email = $_POST["email"] ?? null;
-$password = $_POST["password"] ?? null;
-$conf_password = $_POST["conf_password"] ?? null;
 $error = [];
+$username = $email = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
+    $username = ($_POST["username"]);
+    $email = ($_POST["email"]);
+    $password = $_POST["password"];
+    $conf_password = $_POST["conf_password"];
 
-// Vérification Username 3-20 caractères, alphanumerique
-if (empty($username)){
-    $error = 'Un nom est requis';
-    echo "<br>" . $error;
+    // Username
+    if (empty($username)) {
+        $error['username'] = "Le nom d'utilisateur est requis.";
+    } elseif (strlen($username) < 3 || strlen($username) > 20) {
+        $error['username'] = "Doit comporter entre 3 et 20 caractères.";
+    } elseif (!ctype_alnum($username)){
+        $error['username'] = "Le nom doir être en alphanumérique";
+    }
     
-}elseif (strlen($username)  < 3 && strlen($username) > 20 ){
-   $error = 'Pour Username : Doit comprendre entre 3 et 20 caractères';
-    echo "<br>" . $error;
-}
 
-// Vérification d'Email valide
-if (!filter_var($email, FILTER_VALIDATE_EMAIL)){
-    $error = 'Pour Email : Email invalide';
-    echo "<br> " . $error;
-}
+    // Email
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error['email'] = "Email invalide.";
+    }
 
-// Vérification password minimum 8 caractères
-if (strlen($password) <= 8)
-    $error = 'Pour Password : Charactère insufisant';
-    echo "<br>". $error;
+    // Password
+    if (strlen($password) < 8) {
+        $error['password'] = "Doit comporter au minimum 8 caractères.";
+    }
 
-// Vérification identique au password
-if ( $conf_password !== $password){
-    $error = 'Pour Conf Password :  Le mot de passe ne correspond pas';
-    echo "<br>" . $error; 
-}
+    // Confirm Password
+    if ($password !== $conf_password) {
+        $error['conf_password'] = "Les mots de passe ne correspondent pas.";
+    }
 
+    
 }
 ?>
+
+<form method="POST">
+
+    <div>
+        <label> Username :</label><br>
+        <input type="text" name="username" value="<?= htmlspecialchars($username) ?>">
+        <?php if (isset($error['username'])): ?>
+            <div class="error" style="color:orange"><?= $error['username'] ?></div>
+        <?php endif; ?>
+    </div><br>
+
+    <div>
+        <label> Email :</label><br>
+        <input type="email" name="email" value="<?= htmlspecialchars($email) ?>">
+        <?php if (isset($error['email'])): ?>
+            <div class="error" style="color:orange"><?= $error['email'] ?></div>
+        <?php endif; ?>
+    </div><br>
+
+    <div>
+        <label> Password :</label><br>
+        <input type="password" name="password">
+        <?php if (isset($error['password'])): ?>
+            <div class="error" style="color:orange"><?= $error['password'] ?></div>
+        <?php endif; ?>
+    </div><br>
+
+    <div>
+        <label> Confirm Password :</label><br>
+        <input type="password" name="conf_password">
+        <?php if (isset($error['conf_password'])): ?>
+            <div class="error" style="color:orange"><?= $error['conf_password'] ?></div>
+        <?php endif; ?>
+    </div><br>
+
+    <button type="submit">Inscription</button>
+</form>
 
 </body>
 </html>
