@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,31 +22,6 @@ $products = [
     10 => ["name" => "Chaussettes", "price" => 9.99]
 ];
 
-
-
-$search = $_GET['recherche'] ?? '';
-$resultat = true;
-
-if (isset($search)){
-    echo "Résultat : ";
-
-    foreach ($products as $product){
-        if (stripos($product["name"], $search) !== false){
-            echo $product['name'] . " - " . $product['price'] . " €";
-            $resultat = true; 
-            break;   
-    }
-    }
-
-}
-
-if ($resultat=false){
-    echo "Aucun résultat";
-}
-
-
-
-
 ?>
 
 <form method="GET">
@@ -61,6 +34,33 @@ if ($resultat=false){
     <button type="submit" > Lancer la recherche </button>
 
 </form>
+
+<?php
+
+$search = $_GET['recherche'] ?? '';
+$resultat = false;
+
+if (isset($search)){
+    echo "Résultat : ";
+
+    
+
+    foreach ($products as $product){
+        if (stripos($product["name"], $search) !== false){
+            echo $product['name'] . " - " . $product['price'] . " €";
+            $resultat = true;   
+    }
+ }
+
+
+    if (!$resultat){
+    echo "Aucun résultat";
+    }
+}
+
+?>
+
+
 
 </body>
 </html>
