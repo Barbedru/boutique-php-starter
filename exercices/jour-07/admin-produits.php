@@ -13,15 +13,15 @@ try {
 $search = $_GET["search"] ?? '';
 $products = [];
 
-// SELECT 
-
-$stmt = $pdo->prepare("SELECT * FROM products WHERE name LIKE ? ");
-$stmt->execute(['%' . $search . '%']);
+// Affiche les produits
+$stmt = $pdo->prepare("SELECT * FROM products");
+$stmt->execute();
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 
 // CREATE
+// ligne dessous Si un formulaire a été envoyé en POST, qu’il contient une action, et que cette action est ‘add’, alors j’exécute ce bloc
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"]) && $_POST["action"] === "add") {
 
     $stmt = $pdo->prepare("INSERT INTO products (name, price, stock) VALUES (?, ?, ?)");
@@ -35,13 +35,34 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"]) && $_POST["
     exit;
 }
 
+//UPDATE
+// ligne dessous Si un formulaire a été envoyé en POST, qu’il contient une action, et que cette action est ‘update’, alors j’exécute ce bloc
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"]) && $_POST["action"] === "update") {
+
+    $stmt = $pdo->prepare("UPDATE products SET name = ?, price = ?, stock = ?  WHERE id = ?");
+    $stmt->execute([
+        $_POST["name"],
+        $_POST["price"],
+        $_POST["stock"]
+    ]);
+
+    header("Location: admin-produits.php");
+    exit;
+}
+
+// search de UPDATE
+$productToEdit = null;
+if (isset($_GET['edit'])) {
+    $stmt = $pdo->prepare("SELECT * FROM products WHERE id = ?");
+    $stmt->execute([$_GET['edit']]);
+    $productToEdit = $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
 
 // DELETE
 if (isset($_GET["delete"])) {
     $stmt = $pdo->prepare("DELETE FROM products WHERE id = ?");
-    $stmt->execute(
-        [$_GET["delete"]]
-    );
+    $stmt->execute([$_GET["delete"]]);
 
     header("Location: admin-produits.php");
     exit;
@@ -59,37 +80,68 @@ if (isset($_GET["delete"])) {
 </head>
 
 <body>
-
-    <form method="POST">
-
-        <h2>Ajouter un produit</h2>
-
+    <div>
         <form method="POST">
-            <input type="hidden" name="action" value="add">
 
-            <p><input type="text" name="name" placeholder="Nom du produit"></p>
+            <h2>Ajouter un produit</h2>
 
-            <p><input type="number" name="price" placeholder="Prix €"></p>
+            <form method="POST">
+                <input type="hidden" name="action" value="add">
 
-            <p><input type="number" name="stock" placeholder="Stock"></p>
+                <p><input type="text" name="name" placeholder="Nom du produit"></p>
 
-            <button type="submit">Ajouter</button>
+                <p><input type="number" name="price" placeholder="Prix €"></p>
+
+                <p><input type="number" name="stock" placeholder="Stock"></p>
+
+                <button type="submit">Ajouter</button>
+            </form>
+    </div>
+
+
+<?php if ($productToEdit): ?>
+
+    <div>
+        <form method="POST">
+
+            <h2>Modifier un produit</h2>
+
+            <input type="hidden" name="action" value="update">
+            <input type="hidden" name="id" value="<?= $productToEdit['id'] ?>">
+
+            <input type="search" name="Recherche" placeholder="Recherche un produit">
+
+
+            <input type="text" name="name" value="<?= $productToEdit['name'] ?>">
+
+            <input type="number" name="price" value="<?= $productToEdit['price'] ?>">
+
+            <input type="number" name="stock" value="<?= $productToEdit['stock'] ?>">
+
+            <button type="submit"> Modifier</button>
         </form>
+    </div>
+    <?php endif;?>
 
 
+
+    <div>
         <?php foreach ($products as $product): ?>
-            <p><?= $product["name"] . " " . $product["price"] . "€ " . "En stock: " . $product["stock"] ?> </p>
+            <p><?= $product["name"] ?></p>
+            <p><?= $product["price"] . "€ " ?></p>
+            <p><?= $product["stock"] ?></p>
+
+            <a href="admin-produits.php?edit= <?= $product['id'] ?>"> Modifier </a>
 
             <p>
                 <!--Bouton click de suppression avec message de confirmation(en JS) avec un condition ternaire(? :)-->
-                <input type="text" name="delete">
                 <button onclick="window.confirm('Souhaitez-vous vraiment supprimer ?')                    
                 ? location.href = 'http://localhost:8000/admin-produits.php?delete= <?= $product["id"] ?>'
-                : alert('Fiou');">Supprimer</button>
+                : alert('OSKOUR');">Supprimer</button>
             </p>
 
         <?php endforeach; ?>
-
+    </div>
     </form>
 
 
