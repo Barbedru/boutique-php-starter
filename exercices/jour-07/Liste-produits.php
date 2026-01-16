@@ -44,7 +44,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <tr>
                 <td><?= $product["name"] ?></td>
                 <td><?= $product["price"] ?> €</td>
-                <td><?= $product["stock"] ?> </td>
+                <td><?= $product["stock"] ?></td>
             </tr>
 
         <?php endforeach ?>

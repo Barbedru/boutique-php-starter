@@ -2,8 +2,6 @@
 
 session_start();                      //Toujours en première ligne
 
-
-
 if (!isset($_SESSION["visits"])) {
     $_SESSION["visits"] = 1;
 } else {

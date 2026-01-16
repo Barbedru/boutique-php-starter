@@ -13,7 +13,7 @@ $stock = 250;
 </head>
 <body>
     <h1><?= $name ?></h1>
-    <p>Prix : <?= $price ?> €</p>
+    <p>Prix : <?= $price ?> €</p>            
     <p>Stock : <?= $stock ?></p>
 </body>
 </html>

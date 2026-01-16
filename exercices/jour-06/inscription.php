@@ -19,12 +19,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $conf_password = $_POST["conf_password"];
 
     // Username
-    if (empty($username)) {
+    if (empty($username)) {                                            
         $error['username'] = "Le nom d'utilisateur est requis.";
     } elseif (strlen($username) < 3 || strlen($username) > 20) {
         $error['username'] = "Doit comporter entre 3 et 20 caractères.";
     } elseif (!ctype_alnum($username)){
-        $error['username'] = "Le nom doir être en alphanumérique";
+        $error['username'] = "Le nom doit être en alphanumérique";
     }
     
 

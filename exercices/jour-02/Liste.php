@@ -7,9 +7,10 @@ unset($groceries[2]);                                      // Supprime "Carrots"
 
 var_dump($groceries);                                     // Affiche la structure complète du tableau
 
-echo $groceries[1];                                      //Bananas
+echo $groceries[4];                                      //Bananas
 
-echo count($groceries);                                 // Affiche le nombre d'articles => 5
+count($groceries);                                 // Affiche le nombre d'articles => 5
+
+count ($groceries) - 1;                          // Affiche l'index du dernier article => 4                                        
                                                    
-
 ?>

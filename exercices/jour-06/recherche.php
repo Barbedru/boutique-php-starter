@@ -38,29 +38,26 @@ $products = [
 <?php
 
 $search = $_GET['recherche'] ?? '';
-$resultat = false;
+$results = false;
 
 if (isset($search)){
     echo "Résultat : ";
 
     
-
     foreach ($products as $product){
         if (stripos($product["name"], $search) !== false){
             echo $product['name'] . " - " . $product['price'] . " €";
-            $resultat = true;   
+            $results = true;   
     }
  }
 
 
-    if (!$resultat){
+    if (!$results){
     echo "Aucun résultat";
     }
 }
 
 ?>
-
-
 
 </body>
 </html>

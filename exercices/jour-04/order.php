@@ -16,6 +16,22 @@ switch ($status){
     break;
 }
     
+// MATCH
+
+
+$status = "validated";
+
+$return_status = match ($status){
+        "standby" => 'En attente',
+        "validated" => 'Validé',
+        "shipped" => 'Envoyé',
+        "delivered" => 'Livré',
+        "canceled" => 'Annulé',
+
+};
+    
+
+
 ?>
 
 <!DOCTYPE html>
@@ -33,21 +49,6 @@ switch ($status){
 </html>
 
 
-// MATCH
-
-<?php
-$status = "validated";
-
-$return_status = match ($status){
-        "standby" => 'En attente',
-        "validated" => 'Validé',
-        "shipped" => 'Envoyé',
-        "delivered" => 'Livré',
-        "canceled" => 'Annulé',
-
-};
-    
-?>
 
 <!DOCTYPE html>
 <html lang="en">

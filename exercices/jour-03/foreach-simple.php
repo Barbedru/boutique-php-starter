@@ -20,7 +20,7 @@ $firstNames = ['John', 'Jane', 'Doe', 'Smith'];
 
 foreach ($firstNames as $names){
     $i++;
-    echo "<li> $i . $names</li>";
+    echo "<li> $i " . " $names</li>";
 }
 
 ?>

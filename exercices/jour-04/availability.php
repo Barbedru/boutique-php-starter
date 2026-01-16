@@ -1,6 +1,6 @@
 <?php
 
-$stock=18;
+$stock=15;
 $active=true;
 $date = new DateTime('today');                     // variable => date du jour
 $promoEndDate = new DateTime('2026-01-29') ;      // variable => date de fin de promo
@@ -16,6 +16,8 @@ else{
 
 if ($promoEndDate >= $date){ 
      echo "PROMOTION !";
-}
+}  
+    
+
 
 ?>

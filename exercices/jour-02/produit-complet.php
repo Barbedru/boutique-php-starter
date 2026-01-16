@@ -15,8 +15,9 @@ $product = [
 
 //print_r($product);
 
-echo '<img src="' . $product["image"][0]. '" alt="Rooibos des Vahinés" />';  // Affiche la première image du produit
+echo '<img src=' . $product["image"][0]. '" alt="Rooibos des Vahinés" />';  // Affiche la première image du produit
 
 echo count($product["sizes"]);                                           // Affiche 3, le nombre de tailles disponibles
 echo ($product["reviews"][0]["author"])   // Affiche "Alice", l'auteur du premier avis 
+
 ?>

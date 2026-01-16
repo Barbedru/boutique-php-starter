@@ -1,6 +1,6 @@
 <?php
 
-session_start();
+//session_start();
 
 var_dump($_SESSION['user']);
 
@@ -36,22 +36,22 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
             <label> Username :</label>
             <input type="text" id="username" name="username" value="<?= htmlspecialchars($username) ?>">
 
-    </div>
-
-    <br>
-
-    <label> Password :</label>
-    <input type="text" id="password" name="password" value="<?= htmlspecialchars($password) ?>">
 
 
-    <?php if (isset($error['username'])): ?>
-        <div class="error" style="color:red"><?= $error['username'] ?></div>
-    <?php endif; ?>
+            <br>
 
-    <br>
+            <label> Password :</label>
+            <input type="text" id="password" name="password" value="<?= htmlspecialchars($password) ?>">
 
-    <input type="submit" value="Se connecter">
-    </form>
+
+            <?php if (isset($error['username'])): ?>
+                <div class="error" style="color:red"><?= $error['username'] ?></div>
+            <?php endif; ?>
+
+            <br>
+
+            <input type="submit" value="Se connecter">
+        </form>
     </div>
 
 </body>
