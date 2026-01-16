@@ -1,4 +1,10 @@
 <?php
+
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
+
+
 try {
     $pdo = new PDO(
         "mysql:host=localhost;dbname=boutique;charset=utf8mb4",
@@ -43,7 +49,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"]) && $_POST["
     $stmt->execute([
         $_POST["name"],
         $_POST["price"],
-        $_POST["stock"]
+        $_POST["stock"],
+        $_POST["id"]
     ]);
 
     header("Location: admin-produits.php");
@@ -81,8 +88,6 @@ if (isset($_GET["delete"])) {
 
 <body>
     <div>
-        <form method="POST">
-
             <h2>Ajouter un produit</h2>
 
             <form method="POST">
@@ -117,6 +122,7 @@ if (isset($_GET["delete"])) {
             <input type="number" name="price" value="<?= $productToEdit['price'] ?>">
 
             <input type="number" name="stock" value="<?= $productToEdit['stock'] ?>">
+            <input type="hidden" name="id" value="<?= $productToEdit['id'] ?>">
 
             <button type="submit"> Modifier</button>
         </form>
@@ -142,7 +148,7 @@ if (isset($_GET["delete"])) {
 
         <?php endforeach; ?>
     </div>
-    </form>
+    
 
 
 </body>
