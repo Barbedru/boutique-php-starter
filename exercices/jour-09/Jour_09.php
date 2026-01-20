@@ -208,7 +208,7 @@ $cart = new Cart();
 //Ajout de produits
 $cart->addProduct($sweat,2);
 $cart->addProduct($pantalon,1);
-$cart->addProduct($baskets,3);
+$cart->addProduct($pantoufle,3);
 
 //Afficher
 foreach ($cart->getItems()as $item ){
