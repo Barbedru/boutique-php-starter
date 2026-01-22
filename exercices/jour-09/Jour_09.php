@@ -52,7 +52,7 @@ $chaussures = new Category("Chaussures");
 $accessoires = new Category("Accessoires");
 
 //création d'objet produit
-$sweat = new Product(1,"Sweat", 39.99, $vetements);
+$sweat = new Product(1,"Sweat", 45.99, $vetements);
 $pantalon = new Product(2,"Pantalon", 49.99, $vetements);
 $baskets = new Product(3,"Baskets", 59.99, $chaussures);
 $chapeau = new Product(4,"Chapeau", 19.99, $accessoires);
@@ -70,7 +70,7 @@ echo $lunettes->getProdName() . " (" . $lunettes->getCategory()->getName() . ") 
 echo $pantoufle->getProdName() . " (" . $pantoufle->getCategory()->getName() . ") : " . $pantoufle->getPrice() . "€" . "<br>";
 
 
-
+echo "<br>";
 ?>
 //---------------------EXERCICE-02 : Classe CartItem-------------------//
 <?php
@@ -81,7 +81,7 @@ class CartItem
 {
     function __construct(
         private Product $product,
-        private int $quantite = 50       //le nombre d’unités (par défaut = 1
+        private int $quantite = 1       //le nombre d’unités (par défaut = 1
     ) {}
 
     public function getProduct(): Product
@@ -145,7 +145,7 @@ echo "Je décremente de 1" . "<br>";
 
 echo $cartItem3->getProduct()->getProdName() . " x3 = " . $cartItem3->getTotal() . " €" . "<br>";
 
-
+echo "<br>";
 ?>
 
 //---------------------EXERCICE-03 : Classe Cart----------------------//
@@ -157,7 +157,7 @@ class Cart
 
     private array $items = [];
 
-    public function addProduct(Product $product, int $quantity = 1): void
+    public function add(Product $product, int $quantity = 1): void
     {
         $id = $product->getId();
 
@@ -171,7 +171,7 @@ class Cart
         }
     }
 
-    public function removeProduct(int $productId): void
+    public function remove(int $productId): void
     {
         unset($this->items[$productId]);
     }
@@ -202,24 +202,214 @@ class Cart
 }
 
 
-//Création du panier
 $cart = new Cart();
 
-//Ajout de produits
-$cart->addProduct($sweat,2);
-$cart->addProduct($pantalon,1);
-$cart->addProduct($pantoufle,3);
+$cart->add($sweat, 2);
+$cart->add($chapeau, 1); 
+$cart->add($pantoufle, 3);
 
-//Afficher
-foreach ($cart->getItems()as $item ){
-    echo $item->getProduct()->getName();
+echo "<br>";
+
+foreach ($cart->getItems() as $item) {
+    echo $item->getProduct()->getProdName();
     echo " x " . $item->getQuantity();
-    echo " = " . $item->getTotal() . " €";
-
+    echo " = " . $item->getTotal() . " €<br>";
 }
 
-echo "Total : " . $scart->getTotal() . "€";
+echo "<br>";
+
+echo "Article dans le panier : " . $cart->count() . "<br>";     //3
+echo "<br>";
+
+echo "Total panier : " . $cart->getTotal() . " €<br>";          //141.94€
+echo "<br>";
+
+echo "Retrait de l'article pantoufle <br>";   
+
+$cart->remove($pantoufle->getId());
+echo "Article dans le panier : " . $cart->count() . "<br>";     //2
+
+echo "<br>";
+
+echo "Total panier : " . $cart->getTotal() . " €<br>";          //111.97€
+
+echo "<br>";
+
+$cart->clear();
+echo "Suppression du panier <br>";                                   
+echo "Article dans le panier : " . $cart->count() . "<br>";    //0
+
+echo "<br>";
+?>
+
+//---------------------EXERCICE-04 : User et Address----------------------//
+
+<?php
+
+class Address
+{
+    public function __construct(
+        private string $rue,
+        private string $ville,
+        private string $codePostal,
+        private string $pays
+    ) {}
+
+    public function getAddress(): string
+    {
+        return $this->rue . ", " . $this->ville . ", " . $this->codePostal . ", " . $this->pays;
+    }
+}
+class User
+{
+    private array $addresses = [];                 //tableau d'adresses vide
+    private ?Address $defaultAddress = null;       // ?Address permet de dire que la variable peut être objet Address ou null
+
+    public function __construct(
+        private string $nom,
+        private string $email,
+        private DateTime $dateInscription
+    ) {}
+
+    public function displayUser(): string
+    {
+        return "Nom: " . $this->nom . "<br>" .
+               "Email: " . $this->email . "<br>" .  
+               "Date d'inscription: " . $this->dateInscription->format('Y-m-d') . "<br>";
+    }
+
+    public function addAddress(Address $address, bool $isDefault = false): void        
+    {
+        $this->addresses[] = $address;                          //ajoute l'adresse au tableau
+        if ($isDefault || $this->defaultAddress === null) {     //si isDefault est true ou si aucune adresse par défaut n'est définie
+            $this->defaultAddress = $address;                   // alors => définit l'adresse comme adresse par défaut
+        }
+    }
+
+    public function getAddresses(): array
+    {
+        return $this->addresses;
+    }
+
+    public function getDefaultAddress(): ?Address   // Retourne l'adresse par défaut ou null si aucune n'est définie
+    {
+        return $this->defaultAddress;
+    }
+}
+
+echo "<br>";
+
+$user = new User("Dupont", "dupont@example.com", new DateTime("2025-08-19"));
+
+echo $user->displayUser() . "<br>";
+
+$address1 = new Address("123 Rue de la Paix", "Paris", "75001", "France");
+$address2 = new Address("456 Avenue des Champs-Élysées", "Paris", "75008", "France");
+
+$user->addAddress($address1);
+$user->addAddress($address2);
+
+echo $user->getDefaultAddress()->getAddress() . "<br>";
+
+echo "<br>";
+
+?>
+
+//---------------------EXERCICE-05 : Order ----------------------//
+
+<?php
+
+class Order
+{
+   
+
+    private User $user;
+    private array $items = [];
+    private DateTime $date;
+    private string $statut;
+
+    public function __construct(Cart $cart, User $user)
+    {
+        $this->user = $user;
+        $this->items = $cart->getItems();         // récupération des CartItem
+        $this->date = new DateTime();             // date de création de la commande
+        $this->statut = "";                       // statut par defaut 
+        
+    }
 
 
+    public function getUser(): User
+    {
+        return $this->user;
+
+    }
+
+    public function getItems(): array
+    {
+        return $this->items;
+    }
+
+    public function getDate(): DateTime
+    {
+        return $this->date;
+    }
+
+      public function getStatut(): string
+    {
+        return $this->statut;
+    }
+
+      public function setStatut(string $statut): void
+    {
+        $this->statut = $statut;
+    }
+
+    public function getTotal(): float
+    {
+        $total = 0;
+        foreach ($this->items as $item) {
+            $total += $item->getTotal();
+        }
+        return $total;
+    }
+
+    public function getItemCount(): int
+    {
+        $count = 0;
+        foreach ($this->items as $item) {
+            $count += $item->getQuantity();
+        }
+        return $count;
+    }
+}
+
+echo "<br>";
+
+$cart->add($sweat,1);
+$cart->add($baskets,2);
+$cart->add($pantalon,3);
+
+$order = new Order($cart, $user);
+
+echo "Commande de :" . $user->displayUser() . "<br>";
+
+foreach ($order->getItems() as $item) {
+    echo $item->getProduct()->getProdName();
+    echo " x " . $item->getQuantity();
+    echo " = " . $item->getTotal() . " €<br>";
+}
+
+
+
+echo"<br>";
+
+echo "Nombre d'articles : " . $order->getItemCount() . "<br>";
+echo "Total commande : " . $order->getTotal() . " €<br>";
+
+$order->getDate();
+echo "Date commande : " . $order->getDate()->format('Y-m-d H:i:s') . "<br>";
+
+$order->setStatut("commande en préparation");
+echo "Nouveau statut : " . $order->getStatut() . "<br>";
 
 ?>
